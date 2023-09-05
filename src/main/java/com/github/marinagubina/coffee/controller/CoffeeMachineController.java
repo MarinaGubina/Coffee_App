@@ -4,12 +4,15 @@ import com.github.marinagubina.coffee.dto.CapacityContainerDto;
 import com.github.marinagubina.coffee.entity.CoffeeMachine;
 import com.github.marinagubina.coffee.service.CoffeeMachineService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +30,9 @@ public class CoffeeMachineController {
             summary = "Create new coffee machine",
             description = "Create coffee machine",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "200", description = "OK",content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CoffeeMachine.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid dto"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
@@ -71,7 +76,9 @@ public class CoffeeMachineController {
             summary = "Updating the filling of coffee machine containers by ID",
             description = "Coffee machine must exist",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CoffeeMachine.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid ID"),
                     @ApiResponse(responseCode = "404", description = "coffee machine not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
@@ -87,7 +94,9 @@ public class CoffeeMachineController {
             summary = "Get coffee machine by ID",
             description = "Coffee machine must exist",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "200", description = "OK",content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CoffeeMachine.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid ID"),
                     @ApiResponse(responseCode = "404", description = "coffee machine not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
