@@ -5,7 +5,9 @@ import com.github.marinagubina.coffee.entity.CoffeeMachine;
 import com.github.marinagubina.coffee.exception.CoffeeMachineNotFoundException;
 import com.github.marinagubina.coffee.exception.ContainersOverflowingExceptions;
 import com.github.marinagubina.coffee.repository.CoffeeMachineRepository;
+import com.github.marinagubina.coffee.repository.CoffeeRecordRepository;
 import com.github.marinagubina.coffee.service.CoffeeMachineService;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +17,11 @@ import org.springframework.stereotype.Service;
 public class CoffeeMachineServiceImpl implements CoffeeMachineService {
 
     private final CoffeeMachineRepository machineRepository;
+    private final CoffeeRecordRepository recordRepository;
 
-    public CoffeeMachineServiceImpl(CoffeeMachineRepository machineRepository) {
+    public CoffeeMachineServiceImpl(CoffeeMachineRepository machineRepository, CoffeeRecordRepository recordRepository) {
         this.machineRepository = machineRepository;
+        this.recordRepository = recordRepository;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class CoffeeMachineServiceImpl implements CoffeeMachineService {
         coffeeMachine.setRemainingCoffee(containerDto.getRemainingCoffee());
         coffeeMachine.setRemainingMilk(containerDto.getRemainingMilk());
         coffeeMachine.setRemainingSugar(containerDto.getRemainingSugar());
-        coffeeMachine.setOn(true);
+        coffeeMachine.setEnabled(true);
         return machineRepository.save(coffeeMachine);
         }
     }
@@ -42,14 +46,14 @@ public class CoffeeMachineServiceImpl implements CoffeeMachineService {
     @Override
     public void turnOn(Long id) {
         CoffeeMachine machine = machineRepository.findById(id).orElseThrow(() -> new CoffeeMachineNotFoundException(id));
-        machine.setOn(true);
+        machine.setEnabled(true);
         machineRepository.save(machine);
     }
 
     @Override
     public void turnOff(Long id) {
         CoffeeMachine machine = machineRepository.findById(id).orElseThrow(() -> new CoffeeMachineNotFoundException(id));
-        machine.setOn(false);
+        machine.setEnabled(false);
         machineRepository.save(machine);
     }
 
@@ -77,13 +81,15 @@ public class CoffeeMachineServiceImpl implements CoffeeMachineService {
     }
 
     @Override
+    @Transactional
     public void deleteMachine(Long id) {
+        recordRepository.deleteAllByMachineId(id);
         machineRepository.deleteById(id);
     }
 
     @Override
     public Page<CoffeeMachine> getAllMachines(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page,pageSize);
-        return machineRepository.findAllMachines(pageable);
+        return machineRepository.findAll(pageable);
     }
 }

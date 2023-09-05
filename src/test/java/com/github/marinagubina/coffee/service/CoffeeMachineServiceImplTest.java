@@ -5,12 +5,13 @@ import com.github.marinagubina.coffee.entity.CoffeeMachine;
 import com.github.marinagubina.coffee.exception.CoffeeMachineNotFoundException;
 import com.github.marinagubina.coffee.exception.ContainersOverflowingExceptions;
 import com.github.marinagubina.coffee.repository.CoffeeMachineRepository;
+import com.github.marinagubina.coffee.repository.CoffeeRecordRepository;
 import com.github.marinagubina.coffee.service.impl.CoffeeMachineServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
@@ -24,11 +25,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class CoffeeMachineServiceImplTest {
-    @InjectMocks
+    @Autowired
     private CoffeeMachineServiceImpl coffeeMachineService;
 
-    @Mock
+    @MockBean
     private CoffeeMachineRepository machineRepository;
+
+    @MockBean
+    CoffeeRecordRepository recordRepository;
 
     @Test
     public void testCreateMachine() {
@@ -39,7 +43,7 @@ public class CoffeeMachineServiceImplTest {
         expected.setRemainingCoffee(900);
         expected.setRemainingMilk(800);
         expected.setRemainingSugar(700);
-        expected.setOn(true);
+        expected.setEnabled(true);
         Mockito.when(machineRepository.save(Mockito.any())).thenReturn(expected);
 
         CoffeeMachine actual = coffeeMachineService.createMachine(containerDto);
@@ -65,7 +69,7 @@ public class CoffeeMachineServiceImplTest {
 
         coffeeMachineService.turnOn(machineId);
 
-        assertTrue(coffeeMachine.isOn());
+        assertTrue(coffeeMachine.isEnabled());
     }
 
     @Test
@@ -87,7 +91,7 @@ public class CoffeeMachineServiceImplTest {
 
         coffeeMachineService.turnOff(machineId);
 
-        assertFalse(coffeeMachine.isOn());
+        assertFalse(coffeeMachine.isEnabled());
     }
 
     @Test
@@ -126,7 +130,7 @@ public class CoffeeMachineServiceImplTest {
         coffeeMachine.setRemainingCoffee(800);
         coffeeMachine.setRemainingMilk(700);
         coffeeMachine.setRemainingSugar(600);
-        coffeeMachine.setOn(true);
+        coffeeMachine.setEnabled(true);
 
         CapacityContainerDto containerDto =
                 new CapacityContainerDto(100,200,300,400);
@@ -139,7 +143,7 @@ public class CoffeeMachineServiceImplTest {
         expected.setRemainingCoffee(1000);
         expected.setRemainingMilk(1000);
         expected.setRemainingSugar(1000);
-        expected.setOn(true);
+        expected.setEnabled(true);
 
         assertEquals(expected,coffeeMachineService.updateMachine(machineId,containerDto));
     }
@@ -152,7 +156,7 @@ public class CoffeeMachineServiceImplTest {
         coffeeMachine.setRemainingCoffee(800);
         coffeeMachine.setRemainingMilk(700);
         coffeeMachine.setRemainingSugar(600);
-        coffeeMachine.setOn(true);
+        coffeeMachine.setEnabled(true);
 
         CapacityContainerDto containerDto =
                 new CapacityContainerDto(1000,200,300,400);
@@ -169,6 +173,7 @@ public class CoffeeMachineServiceImplTest {
         coffeeMachineService.deleteMachine(machineId);
 
         Mockito.verify(machineRepository, Mockito.times(1)).deleteById(machineId);
+        Mockito.verify(recordRepository).deleteAllByMachineId(machineId);
     }
 
     @Test
@@ -179,18 +184,18 @@ public class CoffeeMachineServiceImplTest {
         cm1.setRemainingCoffee(900);
         cm1.setRemainingMilk(800);
         cm1.setRemainingSugar(700);
-        cm1.setOn(true);
+        cm1.setEnabled(true);
         CoffeeMachine cm2 = new CoffeeMachine();
         cm2.setRemainingWater(800);
         cm2.setRemainingCoffee(500);
         cm2.setRemainingMilk(300);
         cm2.setRemainingSugar(900);
-        cm2.setOn(true);
+        cm2.setEnabled(true);
         coffeeMachines.add(cm1);
         coffeeMachines.add(cm2);
         Pageable pageable = PageRequest.of(0, 10);
 
-        Mockito.when(machineRepository.findAllMachines(pageable)).thenReturn(new PageImpl<>(coffeeMachines));
+        Mockito.when(machineRepository.findAll(pageable)).thenReturn(new PageImpl<>(coffeeMachines));
 
         Page<CoffeeMachine> result = coffeeMachineService.getAllMachines(0, 10);
 

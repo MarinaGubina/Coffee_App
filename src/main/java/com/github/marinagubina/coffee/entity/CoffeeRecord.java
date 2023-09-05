@@ -26,8 +26,8 @@ public class CoffeeRecord {
     @Column(name = "date_time",nullable = false)
     private LocalDateTime dateTime;
 
-    @Column(name = "is_done")
-    private boolean isDone;
+    @Column(name = "completion_status")
+    private boolean completionStatus;
 
     @ManyToOne
     @JoinColumn(name = "machine_id")
@@ -61,12 +61,12 @@ public class CoffeeRecord {
         this.dateTime = dateTime;
     }
 
-    public boolean isDone() {
-        return isDone;
+    public boolean isCompletionStatus() {
+        return completionStatus;
     }
 
-    public void setDone(boolean done) {
-        isDone = done;
+    public void setCompletionStatus(boolean completionStatus) {
+        this.completionStatus = completionStatus;
     }
 
     public CoffeeMachine getMachine() {
@@ -82,12 +82,12 @@ public class CoffeeRecord {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CoffeeRecord that = (CoffeeRecord) o;
-        return isDone == that.isDone && Objects.equals(id, that.id) && type == that.type && sugar == that.sugar && Objects.equals(dateTime, that.dateTime) && Objects.equals(machine, that.machine);
+        return completionStatus == that.completionStatus && Objects.equals(id, that.id) && type == that.type && sugar == that.sugar && Objects.equals(dateTime, that.dateTime) && Objects.equals(machine, that.machine);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, sugar, dateTime, isDone, machine);
+        return Objects.hash(id, type, sugar, dateTime, completionStatus, machine);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class CoffeeRecord {
                 ", type=" + type +
                 ", sugar=" + sugar +
                 ", dateTime=" + dateTime +
-                ", isDone=" + isDone +
+                ", completionStatus=" + completionStatus +
                 ", machine=" + machine +
                 '}';
     }

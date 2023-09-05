@@ -43,7 +43,7 @@ public class CoffeeRecordServiceImpl implements CoffeeRecordService {
         coffee.setType(type);
         coffee.setSugar(sugar);
         if(checkContainer(coffeeMachine,amountWater,amountCoffee,amountMilk,amountSugar)){
-            coffee.setDone(true);
+            coffee.setCompletionStatus(true);
             coffeeMachine.setRemainingWater(coffeeMachine.getRemainingWater() - amountWater);
             coffeeMachine.setRemainingCoffee(coffeeMachine.getRemainingCoffee() - amountCoffee);
             coffeeMachine.setRemainingMilk(coffeeMachine.getRemainingMilk() - amountMilk);
@@ -53,7 +53,7 @@ public class CoffeeRecordServiceImpl implements CoffeeRecordService {
             return recordRepository.save(coffee);
         }
         else {
-            coffee.setDone(false);
+            coffee.setCompletionStatus(false);
             coffee.setMachine(coffeeMachine);
             recordRepository.save(coffee);
             throw new NotEnoughComponentsException();
@@ -61,7 +61,7 @@ public class CoffeeRecordServiceImpl implements CoffeeRecordService {
     }
 
     private void checkConditionalCoffeeMachine(CoffeeMachine coffeeMachine){
-        if (!coffeeMachine.isOn()) {throw new CoffeeMachineConditionException();}
+        if (!coffeeMachine.isEnabled()) {throw new CoffeeMachineConditionException();}
     }
 
     private boolean checkContainer(CoffeeMachine coffeeMachine,int amountWater,int amountCoffee,
@@ -86,6 +86,6 @@ public class CoffeeRecordServiceImpl implements CoffeeRecordService {
     @Override
     public Page<CoffeeRecord> getAllRecords(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page,pageSize);
-        return recordRepository.findAllRecords(pageable);
+        return recordRepository.findAll(pageable);
     }
 }

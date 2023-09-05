@@ -12,8 +12,8 @@ public class CoffeeMachine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "is_on")
-    private boolean isOn;
+    @Column(name = "enabled")
+    private boolean enabled;
 
     @Column(name = "amount_water")
     private int remainingWater;
@@ -30,12 +30,12 @@ public class CoffeeMachine {
         return id;
     }
 
-    public boolean isOn() {
-        return isOn;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setOn(boolean on) {
-        isOn = on;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public int getRemainingWater() {
@@ -75,19 +75,19 @@ public class CoffeeMachine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CoffeeMachine that = (CoffeeMachine) o;
-        return isOn == that.isOn && remainingWater == that.remainingWater && remainingCoffee == that.remainingCoffee && remainingMilk == that.remainingMilk && remainingSugar == that.remainingSugar && Objects.equals(id, that.id);
+        return enabled == that.enabled && remainingWater == that.remainingWater && remainingCoffee == that.remainingCoffee && remainingMilk == that.remainingMilk && remainingSugar == that.remainingSugar && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isOn, remainingWater, remainingCoffee, remainingMilk, remainingSugar);
+        return Objects.hash(id, enabled, remainingWater, remainingCoffee, remainingMilk, remainingSugar);
     }
 
     @Override
     public String toString() {
         return "CoffeeMachine{" +
                 "id=" + id +
-                ", isOn=" + isOn +
+                ", isOn=" + enabled +
                 ", remainingWater=" + remainingWater +
                 ", remainingCoffee=" + remainingCoffee +
                 ", remainingMilk=" + remainingMilk +
