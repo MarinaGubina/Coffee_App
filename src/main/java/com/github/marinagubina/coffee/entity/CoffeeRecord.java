@@ -5,6 +5,7 @@ import com.github.marinagubina.coffee.constant.Sugar;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "coffee_records")
@@ -74,5 +75,30 @@ public class CoffeeRecord {
 
     public void setMachine(CoffeeMachine machine) {
         this.machine = machine;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CoffeeRecord that = (CoffeeRecord) o;
+        return isDone == that.isDone && Objects.equals(id, that.id) && type == that.type && sugar == that.sugar && Objects.equals(dateTime, that.dateTime) && Objects.equals(machine, that.machine);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, sugar, dateTime, isDone, machine);
+    }
+
+    @Override
+    public String toString() {
+        return "CoffeeRecord{" +
+                "id=" + id +
+                ", type=" + type +
+                ", sugar=" + sugar +
+                ", dateTime=" + dateTime +
+                ", isDone=" + isDone +
+                ", machine=" + machine +
+                '}';
     }
 }

@@ -2,6 +2,8 @@ package com.github.marinagubina.coffee.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "coffee_machines")
 public class CoffeeMachine {
@@ -66,5 +68,30 @@ public class CoffeeMachine {
 
     public void setRemainingSugar(int remainingSugar) {
         this.remainingSugar = remainingSugar;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CoffeeMachine that = (CoffeeMachine) o;
+        return isOn == that.isOn && remainingWater == that.remainingWater && remainingCoffee == that.remainingCoffee && remainingMilk == that.remainingMilk && remainingSugar == that.remainingSugar && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, isOn, remainingWater, remainingCoffee, remainingMilk, remainingSugar);
+    }
+
+    @Override
+    public String toString() {
+        return "CoffeeMachine{" +
+                "id=" + id +
+                ", isOn=" + isOn +
+                ", remainingWater=" + remainingWater +
+                ", remainingCoffee=" + remainingCoffee +
+                ", remainingMilk=" + remainingMilk +
+                ", remainingSugar=" + remainingSugar +
+                '}';
     }
 }

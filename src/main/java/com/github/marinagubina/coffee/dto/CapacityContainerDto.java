@@ -19,6 +19,16 @@ public class CapacityContainerDto {
     @Max(1000)
     private int remainingSugar;
 
+    public CapacityContainerDto() {
+    }
+
+    public CapacityContainerDto(int remainingWater, int remainingCoffee, int remainingMilk, int remainingSugar) {
+        this.remainingWater = remainingWater;
+        this.remainingCoffee = remainingCoffee;
+        this.remainingMilk = remainingMilk;
+        this.remainingSugar = remainingSugar;
+    }
+
     public int getRemainingWater() {
         return remainingWater;
     }
