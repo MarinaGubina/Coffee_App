@@ -1,5 +1,8 @@
 package com.github.marinagubina.coffee.constant;
 
+import lombok.Getter;
+
+@Getter
 public enum Sugar {
     NO_SUGAR(0),
     ONE_SUGAR(5),
@@ -12,7 +15,4 @@ public enum Sugar {
         this.sugarAmount = sugarAmount;
     }
 
-    public int getSugarAmount() {
-        return sugarAmount;
-    }
 }

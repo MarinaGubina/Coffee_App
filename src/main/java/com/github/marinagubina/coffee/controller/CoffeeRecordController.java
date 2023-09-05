@@ -2,6 +2,7 @@ package com.github.marinagubina.coffee.controller;
 
 import com.github.marinagubina.coffee.constant.CoffeeType;
 import com.github.marinagubina.coffee.constant.Sugar;
+import com.github.marinagubina.coffee.dto.CreateRecordDto;
 import com.github.marinagubina.coffee.entity.CoffeeRecord;
 import com.github.marinagubina.coffee.service.CoffeeRecordService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,9 +11,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Validated
 @RequestMapping("/records")
 @Tag(name = "Coffee Records Operation")
 public class CoffeeRecordController {
@@ -37,7 +40,8 @@ public class CoffeeRecordController {
     public CoffeeRecord brewCoffee(@RequestParam(value = "id-machine", defaultValue = "1") @Min(1) Long id,
                                    @RequestParam("coffee") CoffeeType type,
                                    @RequestParam("sugar")Sugar sugar){
-        return recordService.createRecord(id,type,sugar);
+        CreateRecordDto dto = new CreateRecordDto(type,sugar);
+        return recordService.createRecord(id,dto);
     }
 
     @Operation(

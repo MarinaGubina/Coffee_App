@@ -7,7 +7,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CapacityContainerDto {
+public class CoffeeMachineDto {
+
+    private Long id;
+
+    private boolean enabled;
 
     private int remainingWater;
 

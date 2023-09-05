@@ -1,4 +1,4 @@
-package com.github.marinagubina.coffee.controller;
+package com.github.marinagubina.coffee.exception.handler;
 
 import com.github.marinagubina.coffee.exception.*;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class ExceptionsHandler  extends ResponseEntityExceptionHandler {
-    static Logger log = LoggerFactory.getLogger(ExceptionsHandler.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ExceptionsHandler.class.getName());
 
     @ExceptionHandler(value = {CoffeeRecordNotFoundException.class, CoffeeMachineNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {

@@ -9,7 +9,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CoffeeRecordRepository extends JpaRepository<CoffeeRecord,Long> {
-
-    @Query(value = "SELECT * FROM coffee_records",nativeQuery = true)
-    Page<CoffeeRecord> findAllRecords(Pageable pageable);
 }

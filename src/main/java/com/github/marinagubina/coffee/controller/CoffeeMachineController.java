@@ -1,6 +1,7 @@
 package com.github.marinagubina.coffee.controller;
 
 import com.github.marinagubina.coffee.dto.CapacityContainerDto;
+import com.github.marinagubina.coffee.dto.CoffeeMachineDto;
 import com.github.marinagubina.coffee.entity.CoffeeMachine;
 import com.github.marinagubina.coffee.service.CoffeeMachineService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,14 +9,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Validated
 @RequestMapping("/coffee-machines")
 @Tag(name = "Coffee Machine Operation")
 public class CoffeeMachineController {
@@ -32,13 +34,13 @@ public class CoffeeMachineController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK",content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = CoffeeMachine.class))),
+                            schema = @Schema(implementation = CoffeeMachineDto.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid dto"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
     @PostMapping
-    public CoffeeMachine createCoffeeMachine(@RequestBody CapacityContainerDto containerDto){
+    public CoffeeMachineDto createCoffeeMachine(@RequestBody CapacityContainerDto containerDto){
         return machineService.createMachine(containerDto);
     }
 
@@ -78,15 +80,15 @@ public class CoffeeMachineController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = CoffeeMachine.class))),
+                            schema = @Schema(implementation = CoffeeMachineDto.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid ID"),
                     @ApiResponse(responseCode = "404", description = "coffee machine not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
     @PatchMapping("/fill-machine/{id}")
-    public CoffeeMachine fillContainersMachine(@PathVariable Long id,
-                                               @RequestBody @Valid CapacityContainerDto dto){
+    public CoffeeMachineDto fillContainersMachine(@PathVariable Long id,
+                                               @RequestBody CapacityContainerDto dto){
         return machineService.updateMachine(id,dto);
     }
 
@@ -96,14 +98,14 @@ public class CoffeeMachineController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK",content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = CoffeeMachine.class))),
+                            schema = @Schema(implementation = CoffeeMachineDto.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid ID"),
                     @ApiResponse(responseCode = "404", description = "coffee machine not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
     @GetMapping("/{id}")
-    public CoffeeMachine getMachineById(@PathVariable Long id){
+    public CoffeeMachineDto getMachineById(@PathVariable Long id){
         return machineService.getMachineById(id);
     }
 
@@ -133,8 +135,8 @@ public class CoffeeMachineController {
             }
     )
     @GetMapping
-    public Page<CoffeeMachine> getAllMachines(@RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
-                                           @RequestParam(value = "limit", defaultValue = "20") @Min(1) @Max(100) Integer limit){
+    public Page<CoffeeMachineDto> getAllMachines(@RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
+                                                 @RequestParam(value = "limit", defaultValue = "20") @Min(1) @Max(100) Integer limit){
         return machineService.getAllMachines(offset,limit);
     }
 }

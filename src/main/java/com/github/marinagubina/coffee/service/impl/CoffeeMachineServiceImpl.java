@@ -1,27 +1,28 @@
 package com.github.marinagubina.coffee.service.impl;
 
 import com.github.marinagubina.coffee.dto.CapacityContainerDto;
+import com.github.marinagubina.coffee.dto.CoffeeMachineDto;
 import com.github.marinagubina.coffee.entity.CoffeeMachine;
 import com.github.marinagubina.coffee.exception.CoffeeMachineNotFoundException;
 import com.github.marinagubina.coffee.exception.ContainersOverflowingExceptions;
+import com.github.marinagubina.coffee.mapper.CoffeeMachineMapper;
 import com.github.marinagubina.coffee.repository.CoffeeMachineRepository;
 import com.github.marinagubina.coffee.service.CoffeeMachineService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class CoffeeMachineServiceImpl implements CoffeeMachineService {
 
     private final CoffeeMachineRepository machineRepository;
-
-    public CoffeeMachineServiceImpl(CoffeeMachineRepository machineRepository) {
-        this.machineRepository = machineRepository;
-    }
+    private final CoffeeMachineMapper mapper;
 
     @Override
-    public CoffeeMachine createMachine(CapacityContainerDto containerDto) {
+    public CoffeeMachineDto createMachine(CapacityContainerDto containerDto) {
         if(containerDto.getRemainingWater() > 1000 ||
             containerDto.getRemainingCoffee() > 1000 ||
             containerDto.getRemainingMilk() > 1000 ||
@@ -29,37 +30,36 @@ public class CoffeeMachineServiceImpl implements CoffeeMachineService {
             throw new ContainersOverflowingExceptions();
         }
         else{
-        CoffeeMachine coffeeMachine = new CoffeeMachine();
-        coffeeMachine.setRemainingWater(containerDto.getRemainingWater());
-        coffeeMachine.setRemainingCoffee(containerDto.getRemainingCoffee());
-        coffeeMachine.setRemainingMilk(containerDto.getRemainingMilk());
-        coffeeMachine.setRemainingSugar(containerDto.getRemainingSugar());
-        coffeeMachine.setOn(true);
-        return machineRepository.save(coffeeMachine);
+        CoffeeMachine coffeeMachine = mapper.toEntity(containerDto);
+        coffeeMachine.setEnabled(true);
+        machineRepository.save(coffeeMachine);
+        return mapper.toDto(coffeeMachine);
         }
     }
 
     @Override
     public void turnOn(Long id) {
         CoffeeMachine machine = machineRepository.findById(id).orElseThrow(() -> new CoffeeMachineNotFoundException(id));
-        machine.setOn(true);
+        machine.setEnabled(true);
         machineRepository.save(machine);
     }
 
     @Override
     public void turnOff(Long id) {
         CoffeeMachine machine = machineRepository.findById(id).orElseThrow(() -> new CoffeeMachineNotFoundException(id));
-        machine.setOn(false);
+        machine.setEnabled(false);
         machineRepository.save(machine);
     }
 
     @Override
-    public CoffeeMachine getMachineById(Long id) {
-        return machineRepository.findById(id).orElseThrow(() -> new CoffeeMachineNotFoundException(id));
+    public CoffeeMachineDto getMachineById(Long id) {
+        CoffeeMachine coffeeMachine = machineRepository.findById(id)
+                .orElseThrow(() -> new CoffeeMachineNotFoundException(id));
+        return mapper.toDto(coffeeMachine);
     }
 
     @Override
-    public CoffeeMachine updateMachine(Long id, CapacityContainerDto dto) {
+    public CoffeeMachineDto updateMachine(Long id, CapacityContainerDto dto) {
         CoffeeMachine machine = machineRepository.findById(id).orElseThrow(() -> new CoffeeMachineNotFoundException(id));
         int amountWater = machine.getRemainingWater()+ dto.getRemainingWater();
         int amountCoffee = machine.getRemainingCoffee() + dto.getRemainingCoffee();
@@ -72,8 +72,9 @@ public class CoffeeMachineServiceImpl implements CoffeeMachineService {
         machine.setRemainingCoffee(amountCoffee);
         machine.setRemainingMilk(amountMilk);
         machine.setRemainingSugar(amountSugar);
-        return machineRepository.save(machine);
+        machineRepository.save(machine);
         }
+        return mapper.toDto(machine);
     }
 
     @Override
@@ -82,8 +83,9 @@ public class CoffeeMachineServiceImpl implements CoffeeMachineService {
     }
 
     @Override
-    public Page<CoffeeMachine> getAllMachines(int page, int pageSize) {
+    public Page<CoffeeMachineDto> getAllMachines(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page,pageSize);
-        return machineRepository.findAllMachines(pageable);
+        Page<CoffeeMachine> coffeeMachinePage = machineRepository.findAll(pageable);
+        return mapper.toPage(coffeeMachinePage);
     }
 }
