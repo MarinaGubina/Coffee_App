@@ -69,7 +69,7 @@ public class CoffeeMachineServiceImplTest {
 
         coffeeMachineService.turnOn(machineId);
 
-        assertTrue(coffeeMachine.isEnabled());
+        assertTrue(coffeeMachine.getEnabled());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class CoffeeMachineServiceImplTest {
 
         coffeeMachineService.turnOff(machineId);
 
-        assertFalse(coffeeMachine.isEnabled());
+        assertFalse(coffeeMachine.getEnabled());
     }
 
     @Test

@@ -30,7 +30,11 @@ public class CoffeeMachine {
         return id;
     }
 
-    public boolean isEnabled() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean getEnabled() {
         return enabled;
     }
 

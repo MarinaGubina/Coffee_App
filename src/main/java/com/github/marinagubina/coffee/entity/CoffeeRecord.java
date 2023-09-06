@@ -61,7 +61,7 @@ public class CoffeeRecord {
         this.dateTime = dateTime;
     }
 
-    public boolean isCompletionStatus() {
+    public boolean getCompletionStatus() {
         return completionStatus;
     }
 

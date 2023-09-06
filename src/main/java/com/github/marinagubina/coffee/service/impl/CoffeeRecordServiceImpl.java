@@ -61,11 +61,11 @@ public class CoffeeRecordServiceImpl implements CoffeeRecordService {
     }
 
     private void checkConditionalCoffeeMachine(CoffeeMachine coffeeMachine){
-        if (!coffeeMachine.isEnabled()) {throw new CoffeeMachineConditionException();}
+        if (!coffeeMachine.getEnabled()) {throw new CoffeeMachineConditionException();}
     }
 
-    private boolean checkContainer(CoffeeMachine coffeeMachine,int amountWater,int amountCoffee,
-                                   int amountMilk, int amountSugar){
+    private boolean checkContainer(CoffeeMachine coffeeMachine, int amountWater, int amountCoffee,
+                                  int amountMilk, int amountSugar){
         return coffeeMachine.getRemainingWater() >= amountWater &&
                 coffeeMachine.getRemainingCoffee() >= amountCoffee &&
                 coffeeMachine.getRemainingMilk() >= amountMilk &&
