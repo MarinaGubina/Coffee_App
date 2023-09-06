@@ -79,7 +79,11 @@ public class CoffeeMachineControllerTest {
 
         verify(coffeeMachineService, times(1)).getMachineById(1L);
 
-        coffeeMachine.setEnabled(false);
+        mockMvc.perform(patch("/coffee-machines/turn-on/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(coffeeMachineService, times(1)).turnOn(1L);
 
         mockMvc.perform(patch("/coffee-machines/turn-off/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
