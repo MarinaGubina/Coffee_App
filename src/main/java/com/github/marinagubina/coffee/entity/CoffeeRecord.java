@@ -37,6 +37,10 @@ public class CoffeeRecord {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public CoffeeType getType() {
         return type;
     }
